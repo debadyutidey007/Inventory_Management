@@ -5,7 +5,7 @@ import * as React from 'react';
 import { generateStockAlert, type GenerateStockAlertOutput } from '@/ai/flows/generate-stock-alert';
 import type { Item } from '@/types';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { AlertTriangle, TrendingUp, DollarSign, Zap } from 'lucide-react';
+import { AlertTriangle, Zap, RefreshCw } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table';
@@ -18,43 +18,52 @@ export function AIAlert({ lowStockItems }: AIAlertProps) {
   const [alert, setAlert] = React.useState<GenerateStockAlertOutput | null>(null);
   const [isLoading, setIsLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
+  const [retryCount, setRetryCount] = React.useState(0);
 
-  React.useEffect(() => {
-    const fetchAlert = async () => {
-      if (lowStockItems.length === 0) {
-        setIsLoading(false);
-        setAlert(null);
-        return;
-      }
-
-      setIsLoading(true);
+  const fetchAlert = React.useCallback(async () => {
+    if (lowStockItems.length === 0) {
+      setIsLoading(false);
+      setAlert(null);
       setError(null);
-      const alertInput = {
-        lowStockItems: lowStockItems.map(item => ({
-          itemId: item.id,
-          itemName: item.name,
-          currentQuantity: item.quantity,
-          reorderPoint: item.reorderPoint,
-          averageDailySales: item.averageDailySales,
-          sellingPrice: item.price,
-          supplierName: item.supplierName,
-          leadTimeDays: item.leadTimeDays,
-        })),
-      };
+      return;
+    }
 
-      try {
-        const result = await generateStockAlert(alertInput);
-        setAlert(result);
-      } catch (e) {
-        console.error('Error generating AI stock alert:', e);
-        setError('There was an issue with the AI service. Please try again later.');
-      } finally {
-        setIsLoading(false);
-      }
+    setIsLoading(true);
+    setError(null);
+    const alertInput = {
+      lowStockItems: lowStockItems.map(item => ({
+        itemId: item.id,
+        itemName: item.name,
+        currentQuantity: item.quantity,
+        reorderPoint: item.reorderPoint,
+        averageDailySales: item.averageDailySales,
+        sellingPrice: item.price,
+        supplierName: item.supplierName,
+        leadTimeDays: item.leadTimeDays,
+      })),
     };
 
+    try {
+      const result = await generateStockAlert(alertInput);
+      setAlert(result);
+    } catch (e: any) {
+      console.error('Error generating AI stock alert:', e);
+      const errorMessage = e.message || '';
+      if (errorMessage.includes('429') || errorMessage.includes('503')) {
+        setError('The AI service is currently busy. Retrying automatically...');
+        setTimeout(() => setRetryCount(prev => prev + 1), 5000);
+      } else {
+        setError('An unexpected error occurred with the AI service.');
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [lowStockItems, retryCount]);
+
+  React.useEffect(() => {
     fetchAlert();
-  }, [lowStockItems]);
+  }, [fetchAlert]);
 
   if (lowStockItems.length === 0) {
     return null; // Don't render anything if there are no low stock items
@@ -76,6 +85,7 @@ export function AIAlert({ lowStockItems }: AIAlertProps) {
   }
 
   if (error) {
+    const isRetrying = error.includes('Retrying');
     return (
       <Card className="border-destructive/50 bg-destructive/5">
         <CardHeader>
@@ -85,7 +95,10 @@ export function AIAlert({ lowStockItems }: AIAlertProps) {
           </div>
         </CardHeader>
         <CardContent>
-          <p className="text-sm text-destructive">{error}</p>
+          <div className='flex items-start gap-2'>
+              {isRetrying && <RefreshCw className="h-4 w-4 text-destructive animate-spin mt-1" />}
+              <p className="text-sm text-destructive">{error}</p>
+          </div>
         </CardContent>
       </Card>
     );
@@ -108,7 +121,7 @@ export function AIAlert({ lowStockItems }: AIAlertProps) {
       <CardHeader>
         <div className="flex items-center gap-3">
           <Zap className="h-6 w-6 text-primary" />
-          <CardTitle className="font-bold text-primary">AI - Powered Stock Analysis</CardTitle>
+          <CardTitle className="font-bold text-primary">AI-Powered Stock Analysis</CardTitle>
           <Badge variant="default" className="ml-auto">AI-Powered</Badge>
         </div>
         <CardDescription className="pt-2 text-primary/90">

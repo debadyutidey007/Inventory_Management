@@ -49,15 +49,14 @@ export function AIHealthReport({ allItems }: AIHealthReportProps) {
     try {
       const result = await generateInventoryAnalysis(reportInput);
       setReport(result);
-      setError(null);
     } catch (e: any) {
       console.error('Error generating AI health report:', e);
-      if (e.message?.includes('503')) {
-        setError('The AI service is currently busy. It will automatically retry in a few seconds.');
-        // Automatically retry after a delay
+      const errorMessage = e.message || '';
+      if (errorMessage.includes('429') || errorMessage.includes('503')) {
+        setError('The AI service is currently busy. Retrying automatically...');
         setTimeout(() => setRetryCount(prev => prev + 1), 5000); 
       } else {
-        setError('There was an issue with the AI service. Please try again later.');
+        setError('An unexpected error occurred with the AI service.');
       }
     } finally {
       setIsLoading(false);
@@ -114,7 +113,7 @@ export function AIHealthReport({ allItems }: AIHealthReportProps) {
   }
 
   if (error) {
-    const isRetrying = error.includes('retry');
+    const isRetrying = error.includes('Retrying');
     return (
       <Card className="border-destructive/50 bg-destructive/5">
         <CardHeader>

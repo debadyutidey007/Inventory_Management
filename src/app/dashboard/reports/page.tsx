@@ -16,6 +16,8 @@ import type { Item, Category, SoldItem } from "@/types";
 import { generateInventoryAnalysis, type GenerateInventoryAnalysisOutput } from '@/ai/flows/generate-inventory-analysis';
 import { getItems, getCategories, getSoldItems } from '@/lib/data';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { AlertTriangle, RefreshCw } from 'lucide-react';
 
 export default function ReportsPage() {
     const [items, setItems] = React.useState<Item[]>([]);
@@ -25,6 +27,7 @@ export default function ReportsPage() {
     const [isGenerating, setIsGenerating] = React.useState(false);
     const [aiReport, setAiReport] = React.useState<GenerateInventoryAnalysisOutput | null>(null);
     const [error, setError] = React.useState<string | null>(null);
+    const [retryCount, setRetryCount] = React.useState(0);
 
     React.useEffect(() => {
         setItems(getItems());
@@ -33,44 +36,51 @@ export default function ReportsPage() {
         setIsLoading(false);
     }, []);
 
-    React.useEffect(() => {
-        const fetchReport = async () => {
-          if (items.length === 0) {
-            setAiReport(null);
-            return;
-          }
-    
-          setIsGenerating(true);
-          setError(null);
-          const reportInput = {
-            inventoryItems: items.map(item => ({
-              itemId: item.id,
-              itemName: item.name,
-              currentQuantity: item.quantity,
-              reorderPoint: item.reorderPoint,
-              averageDailySales: item.averageDailySales,
-              sellingPrice: item.price,
-              supplierName: item.supplierName,
-              leadTimeDays: item.leadTimeDays,
-            })),
-          };
-    
-          try {
-            const result = await generateInventoryAnalysis(reportInput);
-            setAiReport(result);
-          } catch (e) {
-            console.error('Error generating AI health report:', e);
-            setError('There was an issue with the AI service. Please try again later.');
-          } finally {
-            setIsGenerating(false);
-          }
+    const fetchAiReport = React.useCallback(async () => {
+        if (items.length === 0) {
+          setAiReport(null);
+          setIsGenerating(false);
+          return;
+        }
+  
+        setIsGenerating(true);
+        setError(null);
+        const reportInput = {
+          inventoryItems: items.map(item => ({
+            itemId: item.id,
+            itemName: item.name,
+            currentQuantity: item.quantity,
+            reorderPoint: item.reorderPoint,
+            averageDailySales: item.averageDailySales,
+            sellingPrice: item.price,
+            supplierName: item.supplierName,
+            leadTimeDays: item.leadTimeDays,
+          })),
         };
-    
-        if(!isLoading) {
-            fetchReport();
+  
+        try {
+          const result = await generateInventoryAnalysis(reportInput);
+          setAiReport(result);
+        } catch (e: any) {
+          console.error('Error generating AI health report:', e);
+          const errorMessage = e.message || '';
+          if (errorMessage.includes('429') || errorMessage.includes('503')) {
+            setError('The AI service is currently busy or rate-limited. Retrying automatically in 5 seconds...');
+            setTimeout(() => setRetryCount(prev => prev + 1), 5000);
+          } else {
+            setError('An unexpected error occurred while generating the AI report. Some features may be unavailable.');
+          }
+        } finally {
+          setIsGenerating(false);
         }
       // eslint-disable-next-line react-hooks/exhaustive-deps
-      }, [items, isLoading]);
+      }, [items, retryCount]);
+
+    React.useEffect(() => {
+        if(!isLoading && items.length > 0) {
+            fetchAiReport();
+        }
+      }, [isLoading, items, fetchAiReport]);
 
 
     const lowStockItems = items.filter(item => item.quantity === 0);
@@ -273,7 +283,7 @@ export default function ReportsPage() {
     };
 
     const exportConsolidatedPDF = async () => {
-        if (!aiReport) return;
+        if (!aiReport && !error) return; // Don't generate if report is missing and there's no error
         setIsGenerating(true);
         const doc = new jsPDF();
         const { header, addPageNumbers, margin, pageWidth, pageHeight } = setupPdfDoc(doc);
@@ -346,7 +356,7 @@ export default function ReportsPage() {
         }
         
         // --- AI Health Report Section ---
-        if (items.length > 0) {
+        if (aiReport && items.length > 0) {
             doc.addPage();
             header({} as any);
             doc.setFontSize(18);
@@ -613,7 +623,7 @@ export default function ReportsPage() {
             >
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                        <Button variant="outline" size="sm" disabled={isGenerating || !aiReport}>
+                        <Button variant="outline" size="sm" disabled={isGenerating || (!aiReport && !!error)}>
                             {isGenerating ? "Generating..." : "Export Whole Report as..."}
                             <ChevronDown className="ml-2 h-4 w-4" />
                         </Button>
@@ -631,6 +641,17 @@ export default function ReportsPage() {
                 </DropdownMenu>
             </PageHeader>
             <div className="grid gap-6">
+                {error && (
+                     <Alert variant="destructive">
+                        <div className="flex items-center gap-2">
+                            {error.includes('Retrying') ? <RefreshCw className="h-4 w-4 animate-spin" /> : <AlertTriangle className="h-4 w-4" />}
+                            <AlertTitle>AI Analysis Unavailable</AlertTitle>
+                        </div>
+                        <AlertDescription>
+                            {error}
+                        </AlertDescription>
+                    </Alert>
+                )}
                 <Card>
                     <CardHeader className="flex flex-row items-center justify-between">
                         <div>

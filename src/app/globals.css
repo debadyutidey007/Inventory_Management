@@ -60,6 +60,132 @@ body {
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
   }
+  .theme-stone {
+    --background: 220 10% 98%;
+    --foreground: 220 15% 15%;
+    --card: 220 10% 98%;
+    --card-foreground: 220 15% 15%;
+    --popover: 220 10% 98%;
+    --popover-foreground: 220 15% 15%;
+    --primary: 220 10% 40%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 220 10% 94%;
+    --secondary-foreground: 220 10% 30%;
+    --muted: 220 10% 94%;
+    --muted-foreground: 220 10% 50%;
+    --accent: 220 10% 88%;
+    --accent-foreground: 220 10% 20%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 220 10% 90%;
+    --input: 220 10% 90%;
+    --ring: 220 10% 40%;
+  }
+  .theme-stone.dark {
+    --background: 220 15% 10%;
+    --foreground: 220 10% 95%;
+    --card: 220 15% 10%;
+    --card-foreground: 220 10% 95%;
+    --popover: 220 15% 10%;
+    --popover-foreground: 220 10% 95%;
+    --primary: 220 10% 80%;
+    --primary-foreground: 220 15% 15%;
+    --secondary: 220 15% 20%;
+    --secondary-foreground: 220 10% 90%;
+    --muted: 220 15% 20%;
+    --muted-foreground: 220 10% 60%;
+    --accent: 220 15% 25%;
+    --accent-foreground: 220 10% 90%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 220 15% 25%;
+    --input: 220 15% 25%;
+    --ring: 220 10% 80%;
+  }
+  .theme-orange {
+    --background: 30 100% 98%;
+    --foreground: 24 9.8% 10%;
+    --card: 30 100% 98%;
+    --card-foreground: 24 9.8% 10%;
+    --popover: 30 100% 98%;
+    --popover-foreground: 24 9.8% 10%;
+    --primary: 24.6 95% 53.1%;
+    --primary-foreground: 60 9.1% 97.8%;
+    --secondary: 30 5.9% 90%;
+    --secondary-foreground: 24 9.8% 10%;
+    --muted: 30 5.9% 90%;
+    --muted-foreground: 25 5.3% 44.7%;
+    --accent: 30 5.9% 90%;
+    --accent-foreground: 24 9.8% 10%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 60 9.1% 97.8%;
+    --border: 30 5.9% 90%;
+    --input: 30 5.9% 90%;
+    --ring: 24.6 95% 53.1%;
+  }
+  .theme-orange.dark {
+    --background: 20 14.3% 4.1%;
+    --foreground: 60 9.1% 97.8%;
+    --card: 20 14.3% 4.1%;
+    --card-foreground: 60 9.1% 97.8%;
+    --popover: 20 14.3% 4.1%;
+    --popover-foreground: 60 9.1% 97.8%;
+    --primary: 24.6 95% 53.1%;
+    --primary-foreground: 60 9.1% 97.8%;
+    --secondary: 12 6.5% 15.1%;
+    --secondary-foreground: 60 9.1% 97.8%;
+    --muted: 12 6.5% 15.1%;
+    --muted-foreground: 24 5.4% 63.9%;
+    --accent: 12 6.5% 15.1%;
+    --accent-foreground: 60 9.1% 97.8%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 60 9.1% 97.8%;
+    --border: 12 6.5% 15.1%;
+    --input: 12 6.5% 15.1%;
+    --ring: 24.6 95% 53.1%;
+  }
+  .theme-green {
+    --background: 140 50% 97%;
+    --foreground: 140 10% 10%;
+    --card: 140 50% 97%;
+    --card-foreground: 140 10% 10%;
+    --popover: 140 50% 97%;
+    --popover-foreground: 140 10% 10%;
+    --primary: 142.1 76.2% 36.3%;
+    --primary-foreground: 140 50% 97%;
+    --secondary: 140 20% 92%;
+    --secondary-foreground: 140 10% 10%;
+    --muted: 140 20% 92%;
+    --muted-foreground: 140 5% 45%;
+    --accent: 140 20% 88%;
+    --accent-foreground: 140 10% 10%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 140 50% 97%;
+    --border: 140 20% 90%;
+    --input: 140 20% 90%;
+    --ring: 142.1 76.2% 36.3%;
+  }
+  .theme-green.dark {
+    --background: 140 10% 5%;
+    --foreground: 140 20% 95%;
+    --card: 140 10% 5%;
+    --card-foreground: 140 20% 95%;
+    --popover: 140 10% 5%;
+    --popover-foreground: 140 20% 95%;
+    --primary: 142.1 70.2% 46.3%;
+    --primary-foreground: 140 10% 5%;
+    --secondary: 140 10% 15%;
+    --secondary-foreground: 140 20% 95%;
+    --muted: 140 10% 15%;
+    --muted-foreground: 140 10% 60%;
+    --accent: 140 10% 15%;
+    --accent-foreground: 140 20% 95%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 140 20% 95%;
+    --border: 140 10% 15%;
+    --input: 140 10% 15%;
+    --ring: 142.1 70.2% 46.3%;
+  }
 }
 
 @layer base {

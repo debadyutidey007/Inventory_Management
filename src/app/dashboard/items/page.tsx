@@ -10,6 +10,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { SoldItemsTable } from "@/components/dashboard/sold-items-table";
 import { getItems, saveItems, getCategories, saveCategories, getSoldItems, saveSoldItems } from '@/lib/data';
 import { v4 as uuidv4 } from 'uuid';
+import { AIAlert } from "@/components/dashboard/ai-alert";
 
 export default function ItemsPage() {
   const [items, setItems] = React.useState<Item[]>([]);
@@ -98,7 +99,7 @@ export default function ItemsPage() {
   };
 
   const lowStockItems = items.filter(
-    (item) => item.quantity === 0
+    (item) => item.quantity <= item.reorderPoint
   );
   
   if (isLoading) {
@@ -144,15 +145,18 @@ export default function ItemsPage() {
           />
         </TabsContent>
         <TabsContent value="low-stock">
-          <ItemsTable
-            items={lowStockItems}
-            categories={categories}
-            onAddItem={handleAddItem}
-            onEditItem={handleEditItem}
-            onDeleteItem={handleDeleteItem}
-            onSellItem={handleSellItem}
-            view="low-stock"
-          />
+          <div className="space-y-4">
+            <AIAlert lowStockItems={lowStockItems} />
+            <ItemsTable
+              items={lowStockItems}
+              categories={categories}
+              onAddItem={handleAddItem}
+              onEditItem={handleEditItem}
+              onDeleteItem={handleDeleteItem}
+              onSellItem={handleSellItem}
+              view="low-stock"
+            />
+          </div>
         </TabsContent>
         <TabsContent value="sold">
           <SoldItemsTable items={soldItems} />

@@ -32,6 +32,7 @@ import {
   User,
   ChevronLeft,
   ChevronRight,
+  Github,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { CommandMenu } from '@/components/command-menu';
@@ -58,37 +59,80 @@ export default function DashboardLayout({
   const [openCommandMenu, setOpenCommandMenu] = React.useState(false);
   const [items, setItems] = React.useState<Item[]>([]);
   const [categories, setCategories] = React.useState<Category[]>([]);
-
+  const [profileName, setProfileName] = React.useState("Manager");
 
   React.useEffect(() => {
+    // --- Global Settings and Data Loading ---
     setIsMounted(true);
+
+    // Sidebar state
     try {
         const savedSidebarState = localStorage.getItem('sidebar-collapsed');
         if (savedSidebarState) {
             setIsCollapsed(JSON.parse(savedSidebarState));
         }
     } catch (error) {
-        console.error("Failed to parse from localStorage", error);
+        console.error("Failed to parse sidebar state from localStorage", error);
     }
+    
+    // Theme
+    const applyTheme = () => {
+      const savedTheme = localStorage.getItem("theme") || 'light';
+      
+      // Clear existing theme classes
+      document.documentElement.classList.remove('dark', 'theme-stone', 'theme-orange', 'theme-green');
 
+      // Add the current theme class
+      if (savedTheme !== 'light') {
+        document.documentElement.classList.add(savedTheme);
+      }
+    };
+    applyTheme();
+
+    // Profile data
+    const loadProfile = () => {
+      const savedName = localStorage.getItem("profileName");
+      setProfileName(savedName || "Manager");
+    }
+    loadProfile();
+
+    // Inventory data
+    setItems(getItems());
+    setCategories(getCategories());
+  
+    // Listen for storage changes from other tabs/windows
+    const handleStorageChange = (event: StorageEvent) => {
+      if (event.key === 'items' || event.key === 'categories' || event.key === 'soldItems') {
+        setItems(getItems());
+        setCategories(getCategories());
+      }
+      if (event.key === 'theme') {
+        applyTheme();
+      }
+      if (event.key === 'profileName') {
+        loadProfile();
+      }
+    };
+    window.addEventListener('storage', handleStorageChange);
+
+    // Mobile check
     const checkIsMobile = () => {
         const isMobileDevice = window.innerWidth < 768;
         setIsMobile(isMobileDevice);
-        if(!isMounted && isMobileDevice) { // On initial mount, collapse if mobile
+        if(!isMounted && isMobileDevice) {
             setIsCollapsed(true);
         }
     };
     checkIsMobile();
     window.addEventListener('resize', checkIsMobile);
     
-    return () => window.removeEventListener('resize', checkIsMobile);
+    return () => {
+      window.removeEventListener('resize', checkIsMobile);
+      window.removeEventListener('storage', handleStorageChange);
+    };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  React.useEffect(() => {
-    setItems(getItems());
-    setCategories(getCategories());
-  }, []);
 
   React.useEffect(() => {
     if (isMounted) {
@@ -273,8 +317,8 @@ export default function DashboardLayout({
         !isMobile && (isCollapsed ? "md:grid-cols-[80px_1fr]" : "md:grid-cols-[256px_1fr]")
     )}>
       {!isMobile && desktopNav}
-      <div className="flex flex-col">
-        <header className="flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6">
+      <div className="flex flex-col h-screen overflow-hidden">
+        <header className="flex h-16 shrink-0 items-center gap-4 border-b bg-background px-4 md:px-6">
           {isMobile && mobileNav}
           <div className="w-full flex-1">
             <Button
@@ -298,32 +342,48 @@ export default function DashboardLayout({
             categories={categories}
             router={router}
             />
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="secondary" size="icon" className="rounded-full">
-                <Avatar>
-                  <AvatarImage src="https://placehold.co/100x100.png" data-ai-hint="user avatar" alt="User avatar" />
-                  <AvatarFallback>
-                    <User />
-                  </AvatarFallback>
-                </Avatar>
-                <span className="sr-only">Toggle user menu</span>
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuLabel>My Account</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem asChild>
-                <Link href="/dashboard/settings"><Settings className="mr-2 h-4 w-4" />Settings</Link>
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem asChild>
-                <Link href="/"><LogOut className="mr-2 h-4 w-4" />Logout</Link>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <div className="flex items-center gap-4">
+            <TooltipProvider>
+              <Tooltip>
+                  <TooltipTrigger asChild>
+                      <a href="https://github.com/debadyutidey007/Inventory_Management" target="_blank" rel="noopener noreferrer">
+                          <Button variant="ghost" size="icon">
+                              <Github className="h-5 w-5" />
+                              <span className="sr-only">GitHub Repository</span>
+                          </Button>
+                      </a>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                      <p>View on GitHub</p>
+                  </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+            <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="group rounded-full transition-all duration-300 hover:scale-110 hover:bg-primary/10"
+                  >
+                    <User className="h-5 w-5 text-primary transition-all duration-300 group-hover:scale-110" />
+                    <span className="sr-only">Toggle user menu</span>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                <DropdownMenuLabel>{profileName}</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem asChild>
+                    <Link href="/dashboard/settings"><Settings className="mr-2 h-4 w-4" />Settings</Link>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem asChild>
+                    <Link href="/"><LogOut className="mr-2 h-4 w-4" />Logout</Link>
+                </DropdownMenuItem>
+                </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         </header>
-        <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8 bg-muted/40 overflow-auto">
+        <main className="flex-1 overflow-auto bg-muted/40 p-4 md:gap-8 md:p-8">
           {children}
         </main>
       </div>

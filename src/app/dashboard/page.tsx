@@ -45,31 +45,31 @@ export default function DashboardPage() {
 
   if (isLoading) {
     return (
-      <>
+      <div className="space-y-8">
         <PageHeader title="Dashboard" description="An overview of your inventory." />
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
-          <Skeleton className="h-24" />
-          <Skeleton className="h-24" />
-          <Skeleton className="h-24" />
-          <Skeleton className="h-24" />
-          <Skeleton className="h-24" />
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-5">
+          <Skeleton className="h-28 rounded-lg" />
+          <Skeleton className="h-28 rounded-lg" />
+          <Skeleton className="h-28 rounded-lg" />
+          <Skeleton className="h-28 rounded-lg" />
+          <Skeleton className="h-28 rounded-lg" />
         </div>
-        <div className="grid gap-4 md:grid-cols-7">
-          <div className="md:col-span-4">
-              <Skeleton className="h-80" />
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-7">
+          <div className="lg:col-span-4">
+              <Skeleton className="h-[400px] rounded-lg" />
           </div>
-          <div className="md:col-span-3">
-            <Skeleton className="h-full w-full" />
+          <div className="lg:col-span-3">
+            <Skeleton className="h-[400px] rounded-lg" />
           </div>
         </div>
-      </>
+      </div>
     );
   }
 
   return (
-    <>
+    <div className="space-y-8">
       <PageHeader title="Dashboard" description="An overview of your inventory." />
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-5">
         <StatCard
           title="Total Items"
           value={totalItems.toLocaleString()}
@@ -102,16 +102,16 @@ export default function DashboardPage() {
           icon={TrendingUp}
         />
       </div>
-      <div className="grid gap-4 md:grid-cols-7">
-        <div className="md:col-span-4">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-7">
+        <div className="lg:col-span-4">
             <StockChart items={items} />
         </div>
-        <div className="md:col-span-3">
-          <Suspense fallback={<Skeleton className="h-full w-full" />}>
+        <div className="lg:col-span-3">
+          <Suspense fallback={<Skeleton className="h-full w-full rounded-lg" />}>
             <AIHealthReport allItems={items} />
           </Suspense>
         </div>
       </div>
-    </>
+    </div>
   );
 }
