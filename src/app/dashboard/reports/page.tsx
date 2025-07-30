@@ -18,8 +18,10 @@ import { getItems, getCategories, getSoldItems } from '@/lib/data';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { AlertTriangle, RefreshCw } from 'lucide-react';
+import { PDFDocument } from 'pdf-lib';
 
-export default function ReportsPage() {
+export default function ReportsPage()
+{
     const [items, setItems] = React.useState<Item[]>([]);
     const [categories, setCategories] = React.useState<Category[]>([]);
     const [soldItems, setSoldItems] = React.useState<SoldItem[]>([]);
@@ -28,6 +30,7 @@ export default function ReportsPage() {
     const [aiReport, setAiReport] = React.useState<GenerateInventoryAnalysisOutput | null>(null);
     const [error, setError] = React.useState<string | null>(null);
     const [retryCount, setRetryCount] = React.useState(0);
+    const pdfPassword = "Inventory_Management_System";
 
     React.useEffect(() => {
         setItems(getItems());
@@ -37,55 +40,90 @@ export default function ReportsPage() {
     }, []);
 
     const fetchAiReport = React.useCallback(async () => {
-        if (items.length === 0) {
-          setAiReport(null);
-          setIsGenerating(false);
-          return;
+        if (items.length === 0)
+        {
+            setAiReport(null);
+            setIsGenerating(false);
+            return;
         }
-  
+
         setIsGenerating(true);
         setError(null);
-        const reportInput = {
-          inventoryItems: items.map(item => ({
-            itemId: item.id,
-            itemName: item.name,
-            currentQuantity: item.quantity,
-            reorderPoint: item.reorderPoint,
-            averageDailySales: item.averageDailySales,
-            sellingPrice: item.price,
-            supplierName: item.supplierName,
-            leadTimeDays: item.leadTimeDays,
-          })),
-        };
-  
-        try {
-          const result = await generateInventoryAnalysis(reportInput);
-          setAiReport(result);
-        } catch (e: any) {
-          console.error('Error generating AI health report:', e);
-          const errorMessage = e.message || '';
-          if (errorMessage.includes('429') || errorMessage.includes('503')) {
-            setError('The AI service is currently busy or rate-limited. Retrying automatically in 5 seconds...');
-            setTimeout(() => setRetryCount(prev => prev + 1), 5000);
-          } else {
-            setError('An unexpected error occurred while generating the AI report. Some features may be unavailable.');
-          }
-        } finally {
-          setIsGenerating(false);
+        try
+        {
+            const reportInput = {
+                inventoryItems: items.map(item => ({
+                    itemId: item.id,
+                    itemName: item.name,
+                    currentQuantity: item.quantity,
+                    reorderPoint: item.reorderPoint,
+                    averageDailySales: item.averageDailySales,
+                    sellingPrice: item.price,
+                    supplierName: item.supplierName,
+                    leadTimeDays: item.leadTimeDays,
+                })),
+            };
+
+            const result = await generateInventoryAnalysis(reportInput);
+            setAiReport(result);
+        }
+        catch (e: any)
+        {
+            console.error('Error generating AI health report:', e);
+            const errorMessage = e.message || '';
+            if (errorMessage.includes('429') || errorMessage.includes('503')) {
+                setError('The AI service is currently busy or rate-limited. Retrying automatically in 5 seconds...');
+                setTimeout(() => setRetryCount(prev => prev + 1), 5000);
+            }
+            else
+            {
+                setError('An unexpected error occurred while generating the AI report. Some features may be unavailable.');
+            }
+        }
+        finally
+        {
+            setIsGenerating(false);
         }
       // eslint-disable-next-line react-hooks/exhaustive-deps
-      }, [items, retryCount]);
+    }, [items, retryCount]);
 
     React.useEffect(() => {
-        if(!isLoading && items.length > 0) {
+        if (!isLoading && items.length > 0)
+        {
             fetchAiReport();
         }
-      }, [isLoading, items, fetchAiReport]);
+    }, [isLoading, items, fetchAiReport]);
 
 
     const lowStockItems = items.filter(item => item.quantity === 0);
     const inStockItems = items.filter(item => item.quantity > 0);
     const totalRevenue = soldItems.reduce((sum, item) => sum + item.price * item.quantitySold, 0);
+
+    const encryptAndSavePdf = async (pdfBytes: Uint8Array, fileName: string) => {
+        const pdfDoc = await PDFDocument.load(pdfBytes);
+        const encryptedPdfBytes = await pdfDoc.save({
+            userPassword: pdfPassword,
+            ownerPassword: pdfPassword,
+            permissions: {
+                printing: 'highResolution',
+                modifying: false,
+                copying: true,
+                annotating: false,
+                fillingForms: false,
+                contentAccessibility: true,
+                documentAssembly: false,
+            },
+        });
+
+        const blob = new Blob([encryptedPdfBytes], { type: 'application/pdf' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = fileName;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(link.href);
+    };
 
     const setupPdfDoc = (doc: jsPDF) => {
         const pageHeight = doc.internal.pageSize.height || doc.internal.pageSize.get("height");
@@ -109,34 +147,40 @@ export default function ReportsPage() {
             doc.line(margin, 28, pageWidth - margin, 28);
         };
 
-        const addWatermark = () => {
-            doc.saveGraphicsState();
-            doc.setFont('helvetica', 'bold');
-            doc.setFontSize(72);
-            doc.setTextColor('#000000');
-            doc.setGState(new (doc as any).GState({ opacity: 0.05 }));
-            doc.text("Confidential", pageWidth / 2, pageHeight / 2, {
-                angle: -45,
-                align: 'center'
-            });
-            doc.restoreGraphicsState();
+        const addWatermark = (docInstance: jsPDF) => {
+            const totalPages = (docInstance as any).internal.getNumberOfPages();
+            for (let i = 1; i <= totalPages; i++)
+            {
+                docInstance.setPage(i);
+                docInstance.saveGraphicsState();
+                docInstance.setFont('helvetica', 'bold');
+                docInstance.setFontSize(72);
+                docInstance.setTextColor('#000000');
+                docInstance.setGState(new (docInstance as any).GState({ opacity: 0.05 }));
+                docInstance.text("Confidential", pageWidth / 2, pageHeight / 2, {
+                    angle: -45,
+                    align: 'center'
+                });
+                docInstance.restoreGraphicsState();
+            }
         };
 
-        const addPageNumbers = () => {
-            const pageCount = (doc as any).internal.getNumberOfPages();
-            for (let i = 1; i <= pageCount; i++) {
-                doc.setPage(i);
-                addWatermark(); // Apply watermark to each page
-                doc.setFontSize(8);
-                doc.setTextColor('#888888');
-                doc.text(`Page ${i} of ${pageCount}`, pageWidth / 2, pageHeight - 10, { align: 'center' });
+        const addPageNumbers = (docInstance: jsPDF) => {
+            const pageCount = (docInstance as any).internal.getNumberOfPages();
+            for (let i = 1; i <= pageCount; i++)
+            {
+                docInstance.setPage(i);
+                addWatermark(docInstance);
+                docInstance.setFontSize(8);
+                docInstance.setTextColor('#888888');
+                docInstance.text(`Page ${i} of ${pageCount}`, pageWidth / 2, pageHeight - 10, { align: 'center' });
             }
         };
 
         return { header, addPageNumbers, margin, pageWidth, pageHeight };
     };
 
-    const exportLowStockPDF = () => {
+    const exportLowStockPDF = async () => {
         const doc = new jsPDF();
         const { header, addPageNumbers, margin, pageWidth } = setupPdfDoc(doc);
         
@@ -160,8 +204,9 @@ export default function ReportsPage() {
             margin: { top: 35, left: margin, right: margin }
         });
 
-        addPageNumbers();
-        doc.save(`low-stock-report-${new Date().toISOString().split('T')[0]}.pdf`);
+        addPageNumbers(doc);
+        const pdfBytes = doc.output('arraybuffer');
+        await encryptAndSavePdf(new Uint8Array(pdfBytes), `low-stock-report-${new Date().toISOString().split('T')[0]}.pdf`);
     };
 
     const exportLowStockExcel = () => {
@@ -177,7 +222,7 @@ export default function ReportsPage() {
         XLSX.writeFile(wb, `low-stock-report-${new Date().toISOString().split('T')[0]}.xlsx`);
     };
 
-    const exportFullInventoryPDF = () => {
+    const exportFullInventoryPDF = async () => {
         const doc = new jsPDF();
         const { header, addPageNumbers, margin, pageWidth } = setupPdfDoc(doc);
         
@@ -201,8 +246,9 @@ export default function ReportsPage() {
             margin: { top: 35, left: margin, right: margin }
         });
         
-        addPageNumbers();
-        doc.save(`full-inventory-report-${new Date().toISOString().split('T')[0]}.pdf`);
+        addPageNumbers(doc);
+        const pdfBytes = doc.output('arraybuffer');
+        await encryptAndSavePdf(new Uint8Array(pdfBytes), `full-inventory-report-${new Date().toISOString().split('T')[0]}.pdf`);
     };
 
     const exportFullInventoryExcel = () => {
@@ -220,7 +266,7 @@ export default function ReportsPage() {
         XLSX.writeFile(wb, `full-inventory-report-${new Date().toISOString().split('T')[0]}.xlsx`);
     };
 
-    const exportSoldItemsPDF = () => {
+    const exportSoldItemsPDF = async () => {
         const doc = new jsPDF();
         const { header, addPageNumbers, margin, pageWidth } = setupPdfDoc(doc);
         
@@ -236,8 +282,8 @@ export default function ReportsPage() {
             ]),
             foot: [
                 [{ content: 'Total Revenue', colSpan: 4, styles: { halign: 'right', fontStyle: 'bold' } }, 
-                 { content: `$${totalRevenue.toFixed(2)}`, styles: { fontStyle: 'bold' } }, 
-                 '']
+                { content: `$${totalRevenue.toFixed(2)}`, styles: { fontStyle: 'bold' } }, 
+                '']
             ],
             theme: 'striped',
             headStyles: { fillColor: [12, 127, 242] },
@@ -257,8 +303,9 @@ export default function ReportsPage() {
             margin: { top: 35, left: margin, right: margin }
         });
         
-        addPageNumbers();
-        doc.save(`sold-items-report-${new Date().toISOString().split('T')[0]}.pdf`);
+        addPageNumbers(doc);
+        const pdfBytes = doc.output('arraybuffer');
+        await encryptAndSavePdf(new Uint8Array(pdfBytes), `sold-items-report-${new Date().toISOString().split('T')[0]}.pdf`);
     };
 
     const exportSoldItemsExcel = () => {
@@ -283,7 +330,7 @@ export default function ReportsPage() {
     };
 
     const exportConsolidatedPDF = async () => {
-        if (!aiReport && !error) return; // Don't generate if report is missing and there's no error
+        if (isGenerating || (!aiReport && !error && items.length > 0)) return; 
         setIsGenerating(true);
         const doc = new jsPDF();
         const { header, addPageNumbers, margin, pageWidth, pageHeight } = setupPdfDoc(doc);
@@ -317,7 +364,8 @@ export default function ReportsPage() {
 
         // --- Stock Level Chart ---
         const chartData = [...items].sort((a, b) => b.quantity - a.quantity).slice(0, 10);
-        if (chartData.length > 0) {
+        if (chartData.length > 0)
+        {
             const chartX = margin + 10;
             const chartStartY = currentY;
             const chartHeight = 80;
@@ -347,7 +395,8 @@ export default function ReportsPage() {
             // Y-axis labels and gridlines
             doc.setFontSize(8);
             doc.setDrawColor("#e0e0e0");
-            for(let i=0; i <= 5; i++) {
+            for (let i = 0; i <= 5; i++)
+            {
                 const value = Math.round((maxQuantity / 5) * i);
                 const yPos = chartStartY + chartHeight - ((value / maxQuantity) * chartHeight);
                 doc.text(value.toString(), chartX - 4, yPos + 3, { align: 'right' });
@@ -356,7 +405,8 @@ export default function ReportsPage() {
         }
         
         // --- AI Health Report Section ---
-        if (aiReport && items.length > 0) {
+        if (aiReport && items.length > 0)
+        {
             doc.addPage();
             header({} as any);
             doc.setFontSize(18);
@@ -373,7 +423,8 @@ export default function ReportsPage() {
             finalY += 10;
             
             aiReport.analysis.forEach(section => {
-                if (finalY + 10 > pageHeight - 30) {
+                if (finalY + 10 > pageHeight - 30)
+                {
                     doc.addPage();
                     header({} as any);
                     finalY = 40;
@@ -387,7 +438,8 @@ export default function ReportsPage() {
                 doc.setFont('helvetica', 'normal');
                 section.points.forEach(point => {
                     const splitText = doc.splitTextToSize(`• ${point}`, pageWidth - (margin * 2) - 4);
-                    if (finalY + (splitText.length * 5) > pageHeight - 30) {
+                    if (finalY + (splitText.length * 5) > pageHeight - 30)
+                    {
                         doc.addPage();
                         header({} as any);
                         finalY = 40;
@@ -398,8 +450,10 @@ export default function ReportsPage() {
                 finalY += 4;
             });
             
-            if (aiReport.lowStockItems && aiReport.lowStockItems.length > 0) {
-                if (finalY > (pageHeight - 50)) {
+            if (aiReport.lowStockItems && aiReport.lowStockItems.length > 0)
+            {
+                if (finalY > (pageHeight - 50))
+                {
                     doc.addPage();
                     header({} as any);
                     finalY = 40;
@@ -417,8 +471,10 @@ export default function ReportsPage() {
                 finalY = (doc as any).lastAutoTable.finalY + 5;
             }
 
-             if (aiReport.inStockItems && aiReport.inStockItems.length > 0) {
-                if (finalY > (pageHeight - 50)) {
+            if (aiReport.inStockItems && aiReport.inStockItems.length > 0)
+            {
+                if (finalY > (pageHeight - 50))
+                {
                     doc.addPage();
                     header({} as any);
                     finalY = 40;
@@ -497,8 +553,8 @@ export default function ReportsPage() {
             ]),
             foot: [
                 [{ content: 'Total Revenue', colSpan: 4, styles: { halign: 'right', fontStyle: 'bold' } }, 
-                 { content: `$${totalRevenue.toFixed(2)}`, styles: { fontStyle: 'bold' } }, 
-                 '']
+                { content: `$${totalRevenue.toFixed(2)}`, styles: { fontStyle: 'bold' } }, 
+                '']
             ],
             theme: 'striped',
             headStyles: { fillColor: [12, 127, 242] },
@@ -518,8 +574,9 @@ export default function ReportsPage() {
             margin: { top: 35, left: margin, right: margin }
         });
 
-        addPageNumbers();
-        doc.save(`consolidated-inventory-report-${new Date().toISOString().split('T')[0]}.pdf`);
+        addPageNumbers(doc);
+        const pdfBytes = doc.output('arraybuffer');
+        await encryptAndSavePdf(new Uint8Array(pdfBytes), `consolidated-inventory-report-${new Date().toISOString().split('T')[0]}.pdf`);
         setIsGenerating(false);
     };
 
@@ -598,7 +655,7 @@ export default function ReportsPage() {
                             <CardDescription>Items that are at or below their re-order point.</CardDescription>
                         </CardHeader>
                         <CardContent>
-                           <Skeleton className="h-20 w-full" />
+                        <Skeleton className="h-20 w-full" />
                         </CardContent>
                     </Card>
                     <Card>
@@ -607,7 +664,7 @@ export default function ReportsPage() {
                             <CardDescription>A complete list of all items in your inventory.</CardDescription>
                         </CardHeader>
                         <CardContent>
-                           <Skeleton className="h-20 w-full" />
+                        <Skeleton className="h-20 w-full" />
                         </CardContent>
                     </Card>
                 </div>
@@ -623,17 +680,17 @@ export default function ReportsPage() {
             >
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                        <Button variant="outline" size="sm" disabled={isGenerating || (!aiReport && !!error)}>
+                        <Button variant="outline" size="sm" disabled={isGenerating || (!!error && !aiReport) || items.length === 0}>
                             {isGenerating ? "Generating..." : "Export Whole Report as..."}
                             <ChevronDown className="ml-2 h-4 w-4" />
                         </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent>
-                        <DropdownMenuItem onClick={exportConsolidatedPDF} disabled={isGenerating || !aiReport}>
+                        <DropdownMenuItem onClick={exportConsolidatedPDF} disabled={isGenerating || (!!error && !aiReport) || items.length === 0}>
                             <FileDown className="mr-2 h-4 w-4" />
                             Export as PDF
                         </DropdownMenuItem>
-                        <DropdownMenuItem onClick={exportConsolidatedExcel} disabled={isGenerating || !aiReport}>
+                        <DropdownMenuItem onClick={exportConsolidatedExcel} disabled={isGenerating || items.length === 0}>
                             <FileDown className="mr-2 h-4 w-4" />
                             Export as Excel
                         </DropdownMenuItem>
@@ -642,7 +699,7 @@ export default function ReportsPage() {
             </PageHeader>
             <div className="grid gap-6">
                 {error && (
-                     <Alert variant="destructive">
+                    <Alert variant="destructive">
                         <div className="flex items-center gap-2">
                             {error.includes('Retrying') ? <RefreshCw className="h-4 w-4 animate-spin" /> : <AlertTriangle className="h-4 w-4" />}
                             <AlertTitle>AI Analysis Unavailable</AlertTitle>
@@ -696,7 +753,7 @@ export default function ReportsPage() {
                                         <TableCell className="text-right">{item.reorderPoint}</TableCell>
                                     </TableRow>
                                 )) : (
-                                     <TableRow>
+                                    <TableRow>
                                         <TableCell colSpan={4} className="text-center">
                                             No items are currently low on stock.
                                         </TableCell>
@@ -752,14 +809,14 @@ export default function ReportsPage() {
                                         <TableCell>{format(new Date(item.dateSold), 'PPP')}</TableCell>
                                     </TableRow>
                                 )) : (
-                                     <TableRow>
+                                    <TableRow>
                                         <TableCell colSpan={5} className="text-center">
                                             No items have been sold yet.
                                         </TableCell>
                                     </TableRow>
                                 )}
                             </TableBody>
-                             <TableFooter>
+                            <TableFooter>
                                 <TableRow>
                                     <TableCell colSpan={3} className="text-right font-bold">Total Revenue</TableCell>
                                     <TableCell className="text-right font-bold text-primary">
@@ -815,7 +872,7 @@ export default function ReportsPage() {
                                         <TableCell className="text-right">${item.price.toFixed(2)}</TableCell>
                                     </TableRow>
                                 )) : (
-                                     <TableRow>
+                                    <TableRow>
                                         <TableCell colSpan={4} className="text-center">
                                             No items in inventory.
                                         </TableCell>
