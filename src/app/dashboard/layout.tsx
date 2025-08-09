@@ -38,6 +38,7 @@ import { cn } from '@/lib/utils';
 import { CommandMenu } from '@/components/command-menu';
 import type { Item, Category } from '@/types';
 import { getItems, getCategories } from '@/lib/data';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const navItems = [
   { href: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
@@ -60,8 +61,17 @@ export default function DashboardLayout({
   const [items, setItems] = React.useState<Item[]>([]);
   const [categories, setCategories] = React.useState<Category[]>([]);
   const [profileName, setProfileName] = React.useState("Manager");
+  const [isAuthenticated, setIsAuthenticated] = React.useState(false);
 
   React.useEffect(() => {
+    // --- Authentication Check ---
+    const authStatus = sessionStorage.getItem('isAuthenticated');
+    if (authStatus !== 'true') {
+        router.push('/');
+    } else {
+        setIsAuthenticated(true);
+    }
+
     // --- Global Settings and Data Loading ---
     setIsMounted(true);
 
@@ -151,6 +161,11 @@ export default function DashboardLayout({
     return () => document.removeEventListener("keydown", down)
   }, [])
 
+  const handleLogout = () => {
+    sessionStorage.removeItem('isAuthenticated');
+    router.push('/');
+  };
+
   const toggleCollapse = () => {
     setIsCollapsed(!isCollapsed);
   }
@@ -230,26 +245,13 @@ export default function DashboardLayout({
     );
   };
 
-  if (!isMounted) {
+  if (!isMounted || !isAuthenticated) {
     return (
-        <div className="grid min-h-screen w-full md:grid-cols-[256px_1fr]">
-             <div className="relative hidden h-screen border-r bg-background transition-all md:block w-64">
-                 <div className="flex h-full max-h-screen flex-col gap-2">
-                    <div className="flex h-16 items-center border-b px-6">
-                        <Link href="/dashboard" className="flex items-center gap-2 font-semibold">
-                            <Package className="h-6 w-6 text-primary" />
-                            <span>Inventory Manager</span>
-                        </Link>
-                    </div>
-                 </div>
-             </div>
-             <div className="flex flex-col">
-                <header className="flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6">
-                </header>
-                <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8 bg-muted/40 overflow-auto">
-                    {children}
-                </main>
-             </div>
+        <div className="flex h-screen w-full items-center justify-center bg-background">
+            <div className="flex flex-col items-center space-y-4">
+                <Package className="h-12 w-12 animate-pulse text-primary" />
+                <p className="text-muted-foreground">Loading dashboard...</p>
+            </div>
         </div>
     );
   }
@@ -376,8 +378,8 @@ export default function DashboardLayout({
                     <Link href="/dashboard/settings"><Settings className="mr-2 h-4 w-4" />Settings</Link>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem asChild>
-                    <Link href="/"><LogOut className="mr-2 h-4 w-4" />Logout</Link>
+                <DropdownMenuItem onClick={handleLogout}>
+                    <LogOut className="mr-2 h-4 w-4" />Logout
                 </DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>

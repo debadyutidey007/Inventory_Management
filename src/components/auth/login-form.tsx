@@ -1,3 +1,4 @@
+
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -42,6 +43,9 @@ export function LoginForm() {
     // In a real app, you'd handle authentication here.
     // For this scaffold, we'll just show a success toast and redirect.
     console.log(values);
+    if (typeof window !== 'undefined') {
+        sessionStorage.setItem('isAuthenticated', 'true');
+    }
     toast({
       title: "Login Successful",
       description: "Welcome back!",

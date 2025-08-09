@@ -15,17 +15,6 @@
         "app/dashboard/page": "action-browser",
         "app/dashboard/reports/page": "action-browser"
       }
-    },
-    "40b8de11c9e8b2966b948d75a1a7f0e7449fff054a": {
-      "workers": {
-        "app/dashboard/items/page": {
-          "moduleId": "[project]/.next-internal/server/app/dashboard/items/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/generate-stock-alert.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
-          "async": false
-        }
-      },
-      "layer": {
-        "app/dashboard/items/page": "action-browser"
-      }
     }
   },
   "edge": {},
