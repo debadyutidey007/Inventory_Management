@@ -77,7 +77,7 @@ export function ItemsTable({ items, categories, view, onAddItem, onEditItem, onD
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
   const [isSellDialogOpen, setIsSellDialogOpen] = React.useState(false);
   const [selectedItem, setSelectedItem] = React.useState<Item | null>(null);
-  const [sellQuantity, setSellQuantity] = React.useState(1);
+  const [sellQuantity, setSellQuantity] = React.useState<number | string>(1);
 
   const getCategoryName = (categoryId: string) => {
     return categories.find((c) => c.id === categoryId)?.name || "N/A";
@@ -96,11 +96,12 @@ export function ItemsTable({ items, categories, view, onAddItem, onEditItem, onD
   };
 
   const handleSellConfirm = () => {
-    if (selectedItem && sellQuantity > 0 && sellQuantity <= selectedItem.quantity) {
-      onSellItem(selectedItem, sellQuantity);
+    const quantityNum = Number(sellQuantity);
+    if (selectedItem && quantityNum > 0 && quantityNum <= selectedItem.quantity) {
+      onSellItem(selectedItem, quantityNum);
       toast({
         title: "Item Sold",
-        description: `Sold ${sellQuantity} of "${selectedItem.name}".`,
+        description: `Sold ${quantityNum} of "${selectedItem.name}".`,
       });
       setIsSellDialogOpen(false);
       setSelectedItem(null);
@@ -395,7 +396,17 @@ export function ItemsTable({ items, categories, view, onAddItem, onEditItem, onD
                         min="1"
                         max={selectedItem?.quantity}
                         value={sellQuantity}
-                        onChange={(e) => setSellQuantity(parseInt(e.target.value, 10) || 1)}
+                        onChange={(e) => {
+                            const value = e.target.value;
+                            if (value === "") {
+                                setSellQuantity("");
+                            } else {
+                                const numValue = parseInt(value, 10);
+                                if (!isNaN(numValue)) {
+                                    setSellQuantity(numValue);
+                                }
+                            }
+                        }}
                         className="col-span-3"
                     />
                 </div>

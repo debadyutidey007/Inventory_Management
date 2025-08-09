@@ -1326,11 +1326,12 @@ function ItemsTable({ items, categories, view, onAddItem, onEditItem, onDeleteIt
         }
     };
     const handleSellConfirm = ()=>{
-        if (selectedItem && sellQuantity > 0 && sellQuantity <= selectedItem.quantity) {
-            onSellItem(selectedItem, sellQuantity);
+        const quantityNum = Number(sellQuantity);
+        if (selectedItem && quantityNum > 0 && quantityNum <= selectedItem.quantity) {
+            onSellItem(selectedItem, quantityNum);
             toast({
                 title: "Item Sold",
-                description: `Sold ${sellQuantity} of "${selectedItem.name}".`
+                description: `Sold ${quantityNum} of "${selectedItem.name}".`
             });
             setIsSellDialogOpen(false);
             setSelectedItem(null);
@@ -1352,7 +1353,7 @@ function ItemsTable({ items, categories, view, onAddItem, onEditItem, onDeleteIt
                     children: row.getValue("name")
                 }, void 0, false, {
                     fileName: "[project]/src/components/dashboard/items-table.tsx",
-                    lineNumber: 121,
+                    lineNumber: 122,
                     columnNumber: 26
                 }, this)
         },
@@ -1384,7 +1385,7 @@ function ItemsTable({ items, categories, view, onAddItem, onEditItem, onDeleteIt
                     children: quantity
                 }, void 0, false, {
                     fileName: "[project]/src/components/dashboard/items-table.tsx",
-                    lineNumber: 146,
+                    lineNumber: 147,
                     columnNumber: 16
                 }, this);
             }
@@ -1403,7 +1404,7 @@ function ItemsTable({ items, categories, view, onAddItem, onEditItem, onDeleteIt
                     children: formatted
                 }, void 0, false, {
                     fileName: "[project]/src/components/dashboard/items-table.tsx",
-                    lineNumber: 158,
+                    lineNumber: 159,
                     columnNumber: 16
                 }, this);
             }
@@ -1427,25 +1428,25 @@ function ItemsTable({ items, categories, view, onAddItem, onEditItem, onDeleteIt
                                             children: "Open menu"
                                         }, void 0, false, {
                                             fileName: "[project]/src/components/dashboard/items-table.tsx",
-                                            lineNumber: 171,
+                                            lineNumber: 172,
                                             columnNumber: 19
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$ellipsis$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__MoreHorizontal$3e$__["MoreHorizontal"], {
                                             className: "h-4 w-4"
                                         }, void 0, false, {
                                             fileName: "[project]/src/components/dashboard/items-table.tsx",
-                                            lineNumber: 172,
+                                            lineNumber: 173,
                                             columnNumber: 19
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/components/dashboard/items-table.tsx",
-                                    lineNumber: 170,
+                                    lineNumber: 171,
                                     columnNumber: 17
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/src/components/dashboard/items-table.tsx",
-                                lineNumber: 169,
+                                lineNumber: 170,
                                 columnNumber: 15
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$dropdown$2d$menu$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["DropdownMenuContent"], {
@@ -1455,7 +1456,7 @@ function ItemsTable({ items, categories, view, onAddItem, onEditItem, onDeleteIt
                                         children: "Actions"
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/dashboard/items-table.tsx",
-                                        lineNumber: 176,
+                                        lineNumber: 177,
                                         columnNumber: 17
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$dropdown$2d$menu$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["DropdownMenuItem"], {
@@ -1469,12 +1470,12 @@ function ItemsTable({ items, categories, view, onAddItem, onEditItem, onDeleteIt
                                         children: "Copy item ID"
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/dashboard/items-table.tsx",
-                                        lineNumber: 177,
+                                        lineNumber: 178,
                                         columnNumber: 17
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$dropdown$2d$menu$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["DropdownMenuSeparator"], {}, void 0, false, {
                                         fileName: "[project]/src/components/dashboard/items-table.tsx",
-                                        lineNumber: 186,
+                                        lineNumber: 187,
                                         columnNumber: 17
                                     }, this),
                                     view === 'all' && item.quantity > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$dropdown$2d$menu$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["DropdownMenuItem"], {
@@ -1488,14 +1489,14 @@ function ItemsTable({ items, categories, view, onAddItem, onEditItem, onDeleteIt
                                                 className: "mr-2 h-4 w-4"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/components/dashboard/items-table.tsx",
-                                                lineNumber: 195,
+                                                lineNumber: 196,
                                                 columnNumber: 25
                                             }, this),
                                             "Sell Item"
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/components/dashboard/items-table.tsx",
-                                        lineNumber: 188,
+                                        lineNumber: 189,
                                         columnNumber: 21
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$dropdown$2d$menu$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["DropdownMenuItem"], {
@@ -1508,14 +1509,14 @@ function ItemsTable({ items, categories, view, onAddItem, onEditItem, onDeleteIt
                                                 className: "mr-2 h-4 w-4"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/components/dashboard/items-table.tsx",
-                                                lineNumber: 203,
+                                                lineNumber: 204,
                                                 columnNumber: 21
                                             }, this),
                                             "Edit"
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/components/dashboard/items-table.tsx",
-                                        lineNumber: 199,
+                                        lineNumber: 200,
                                         columnNumber: 17
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$dropdown$2d$menu$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["DropdownMenuItem"], {
@@ -1529,31 +1530,31 @@ function ItemsTable({ items, categories, view, onAddItem, onEditItem, onDeleteIt
                                                 className: "mr-2 h-4 w-4"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/components/dashboard/items-table.tsx",
-                                                lineNumber: 213,
+                                                lineNumber: 214,
                                                 columnNumber: 19
                                             }, this),
                                             "Delete"
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/components/dashboard/items-table.tsx",
-                                        lineNumber: 206,
+                                        lineNumber: 207,
                                         columnNumber: 17
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/components/dashboard/items-table.tsx",
-                                lineNumber: 175,
+                                lineNumber: 176,
                                 columnNumber: 15
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/components/dashboard/items-table.tsx",
-                        lineNumber: 168,
+                        lineNumber: 169,
                         columnNumber: 13
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/src/components/dashboard/items-table.tsx",
-                    lineNumber: 167,
+                    lineNumber: 168,
                     columnNumber: 11
                 }, this);
             }
@@ -1586,7 +1587,7 @@ function ItemsTable({ items, categories, view, onAddItem, onEditItem, onDeleteIt
                         className: "max-w-sm"
                     }, void 0, false, {
                         fileName: "[project]/src/components/dashboard/items-table.tsx",
-                        lineNumber: 242,
+                        lineNumber: 243,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$dialog$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Dialog"], {
@@ -1602,19 +1603,19 @@ function ItemsTable({ items, categories, view, onAddItem, onEditItem, onDeleteIt
                                             className: "mr-2 h-4 w-4"
                                         }, void 0, false, {
                                             fileName: "[project]/src/components/dashboard/items-table.tsx",
-                                            lineNumber: 253,
+                                            lineNumber: 254,
                                             columnNumber: 21
                                         }, this),
                                         " Add Item"
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/components/dashboard/items-table.tsx",
-                                    lineNumber: 252,
+                                    lineNumber: 253,
                                     columnNumber: 17
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/src/components/dashboard/items-table.tsx",
-                                lineNumber: 251,
+                                lineNumber: 252,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$dialog$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["DialogContent"], {
@@ -1626,20 +1627,20 @@ function ItemsTable({ items, categories, view, onAddItem, onEditItem, onDeleteIt
                                                 children: "Add New Item"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/components/dashboard/items-table.tsx",
-                                                lineNumber: 258,
+                                                lineNumber: 259,
                                                 columnNumber: 21
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$dialog$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["DialogDescription"], {
                                                 children: "Fill in the details below to add a new item to your inventory."
                                             }, void 0, false, {
                                                 fileName: "[project]/src/components/dashboard/items-table.tsx",
-                                                lineNumber: 259,
+                                                lineNumber: 260,
                                                 columnNumber: 21
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/components/dashboard/items-table.tsx",
-                                        lineNumber: 257,
+                                        lineNumber: 258,
                                         columnNumber: 17
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$dashboard$2f$item$2d$form$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["ItemForm"], {
@@ -1648,25 +1649,25 @@ function ItemsTable({ items, categories, view, onAddItem, onEditItem, onDeleteIt
                                         onAddItem: onAddItem
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/dashboard/items-table.tsx",
-                                        lineNumber: 263,
+                                        lineNumber: 264,
                                         columnNumber: 17
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/components/dashboard/items-table.tsx",
-                                lineNumber: 256,
+                                lineNumber: 257,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/components/dashboard/items-table.tsx",
-                        lineNumber: 250,
+                        lineNumber: 251,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/components/dashboard/items-table.tsx",
-                lineNumber: 241,
+                lineNumber: 242,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1680,18 +1681,18 @@ function ItemsTable({ items, categories, view, onAddItem, onEditItem, onDeleteIt
                                             children: header.isPlaceholder ? null : (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$tanstack$2f$react$2d$table$2f$build$2f$lib$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$locals$3e$__["flexRender"])(header.column.columnDef.header, header.getContext())
                                         }, header.id, false, {
                                             fileName: "[project]/src/components/dashboard/items-table.tsx",
-                                            lineNumber: 278,
+                                            lineNumber: 279,
                                             columnNumber: 21
                                         }, this);
                                     })
                                 }, headerGroup.id, false, {
                                     fileName: "[project]/src/components/dashboard/items-table.tsx",
-                                    lineNumber: 275,
+                                    lineNumber: 276,
                                     columnNumber: 15
                                 }, this))
                         }, void 0, false, {
                             fileName: "[project]/src/components/dashboard/items-table.tsx",
-                            lineNumber: 273,
+                            lineNumber: 274,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["TableBody"], {
@@ -1701,12 +1702,12 @@ function ItemsTable({ items, categories, view, onAddItem, onEditItem, onDeleteIt
                                             children: (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$tanstack$2f$react$2d$table$2f$build$2f$lib$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$locals$3e$__["flexRender"])(cell.column.columnDef.cell, cell.getContext())
                                         }, cell.id, false, {
                                             fileName: "[project]/src/components/dashboard/items-table.tsx",
-                                            lineNumber: 299,
+                                            lineNumber: 300,
                                             columnNumber: 21
                                         }, this))
                                 }, row.id, false, {
                                     fileName: "[project]/src/components/dashboard/items-table.tsx",
-                                    lineNumber: 294,
+                                    lineNumber: 295,
                                     columnNumber: 17
                                 }, this)) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["TableRow"], {
                                 children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["TableCell"], {
@@ -1715,28 +1716,28 @@ function ItemsTable({ items, categories, view, onAddItem, onEditItem, onDeleteIt
                                     children: "No results."
                                 }, void 0, false, {
                                     fileName: "[project]/src/components/dashboard/items-table.tsx",
-                                    lineNumber: 310,
+                                    lineNumber: 311,
                                     columnNumber: 17
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/src/components/dashboard/items-table.tsx",
-                                lineNumber: 309,
+                                lineNumber: 310,
                                 columnNumber: 15
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/src/components/dashboard/items-table.tsx",
-                            lineNumber: 291,
+                            lineNumber: 292,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/components/dashboard/items-table.tsx",
-                    lineNumber: 272,
+                    lineNumber: 273,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/src/components/dashboard/items-table.tsx",
-                lineNumber: 271,
+                lineNumber: 272,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1750,7 +1751,7 @@ function ItemsTable({ items, categories, view, onAddItem, onEditItem, onDeleteIt
                         children: "Previous"
                     }, void 0, false, {
                         fileName: "[project]/src/components/dashboard/items-table.tsx",
-                        lineNumber: 322,
+                        lineNumber: 323,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Button"], {
@@ -1761,13 +1762,13 @@ function ItemsTable({ items, categories, view, onAddItem, onEditItem, onDeleteIt
                         children: "Next"
                     }, void 0, false, {
                         fileName: "[project]/src/components/dashboard/items-table.tsx",
-                        lineNumber: 330,
+                        lineNumber: 331,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/components/dashboard/items-table.tsx",
-                lineNumber: 321,
+                lineNumber: 322,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$dialog$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Dialog"], {
@@ -1782,7 +1783,7 @@ function ItemsTable({ items, categories, view, onAddItem, onEditItem, onDeleteIt
                                     children: "Edit Item"
                                 }, void 0, false, {
                                     fileName: "[project]/src/components/dashboard/items-table.tsx",
-                                    lineNumber: 344,
+                                    lineNumber: 345,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$dialog$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["DialogDescription"], {
@@ -1793,13 +1794,13 @@ function ItemsTable({ items, categories, view, onAddItem, onEditItem, onDeleteIt
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/components/dashboard/items-table.tsx",
-                                    lineNumber: 345,
+                                    lineNumber: 346,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/components/dashboard/items-table.tsx",
-                            lineNumber: 343,
+                            lineNumber: 344,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$dashboard$2f$item$2d$form$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["ItemForm"], {
@@ -1812,18 +1813,18 @@ function ItemsTable({ items, categories, view, onAddItem, onEditItem, onDeleteIt
                             onEditItem: onEditItem
                         }, void 0, false, {
                             fileName: "[project]/src/components/dashboard/items-table.tsx",
-                            lineNumber: 349,
+                            lineNumber: 350,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/components/dashboard/items-table.tsx",
-                    lineNumber: 342,
+                    lineNumber: 343,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/src/components/dashboard/items-table.tsx",
-                lineNumber: 341,
+                lineNumber: 342,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$alert$2d$dialog$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["AlertDialog"], {
@@ -1837,7 +1838,7 @@ function ItemsTable({ items, categories, view, onAddItem, onEditItem, onDeleteIt
                                     children: "Are you sure?"
                                 }, void 0, false, {
                                     fileName: "[project]/src/components/dashboard/items-table.tsx",
-                                    lineNumber: 365,
+                                    lineNumber: 366,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$alert$2d$dialog$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["AlertDialogDescription"], {
@@ -1848,13 +1849,13 @@ function ItemsTable({ items, categories, view, onAddItem, onEditItem, onDeleteIt
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/components/dashboard/items-table.tsx",
-                                    lineNumber: 366,
+                                    lineNumber: 367,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/components/dashboard/items-table.tsx",
-                            lineNumber: 364,
+                            lineNumber: 365,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$alert$2d$dialog$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["AlertDialogFooter"], {
@@ -1864,7 +1865,7 @@ function ItemsTable({ items, categories, view, onAddItem, onEditItem, onDeleteIt
                                     children: "Cancel"
                                 }, void 0, false, {
                                     fileName: "[project]/src/components/dashboard/items-table.tsx",
-                                    lineNumber: 372,
+                                    lineNumber: 373,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$alert$2d$dialog$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["AlertDialogAction"], {
@@ -1872,24 +1873,24 @@ function ItemsTable({ items, categories, view, onAddItem, onEditItem, onDeleteIt
                                     children: "Delete"
                                 }, void 0, false, {
                                     fileName: "[project]/src/components/dashboard/items-table.tsx",
-                                    lineNumber: 373,
+                                    lineNumber: 374,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/components/dashboard/items-table.tsx",
-                            lineNumber: 371,
+                            lineNumber: 372,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/components/dashboard/items-table.tsx",
-                    lineNumber: 363,
+                    lineNumber: 364,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/src/components/dashboard/items-table.tsx",
-                lineNumber: 362,
+                lineNumber: 363,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$dialog$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Dialog"], {
@@ -1907,7 +1908,7 @@ function ItemsTable({ items, categories, view, onAddItem, onEditItem, onDeleteIt
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/components/dashboard/items-table.tsx",
-                                    lineNumber: 382,
+                                    lineNumber: 383,
                                     columnNumber: 17
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$dialog$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["DialogDescription"], {
@@ -1917,13 +1918,13 @@ function ItemsTable({ items, categories, view, onAddItem, onEditItem, onDeleteIt
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/components/dashboard/items-table.tsx",
-                                    lineNumber: 383,
+                                    lineNumber: 384,
                                     columnNumber: 17
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/components/dashboard/items-table.tsx",
-                            lineNumber: 381,
+                            lineNumber: 382,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1937,7 +1938,7 @@ function ItemsTable({ items, categories, view, onAddItem, onEditItem, onDeleteIt
                                         children: "Quantity"
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/dashboard/items-table.tsx",
-                                        lineNumber: 389,
+                                        lineNumber: 390,
                                         columnNumber: 21
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Input"], {
@@ -1946,22 +1947,32 @@ function ItemsTable({ items, categories, view, onAddItem, onEditItem, onDeleteIt
                                         min: "1",
                                         max: selectedItem?.quantity,
                                         value: sellQuantity,
-                                        onChange: (e)=>setSellQuantity(parseInt(e.target.value, 10) || 1),
+                                        onChange: (e)=>{
+                                            const value = e.target.value;
+                                            if (value === "") {
+                                                setSellQuantity("");
+                                            } else {
+                                                const numValue = parseInt(value, 10);
+                                                if (!isNaN(numValue)) {
+                                                    setSellQuantity(numValue);
+                                                }
+                                            }
+                                        },
                                         className: "col-span-3"
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/dashboard/items-table.tsx",
-                                        lineNumber: 392,
+                                        lineNumber: 393,
                                         columnNumber: 21
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/components/dashboard/items-table.tsx",
-                                lineNumber: 388,
+                                lineNumber: 389,
                                 columnNumber: 17
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/src/components/dashboard/items-table.tsx",
-                            lineNumber: 387,
+                            lineNumber: 388,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$dialog$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["DialogFooter"], {
@@ -1972,7 +1983,7 @@ function ItemsTable({ items, categories, view, onAddItem, onEditItem, onDeleteIt
                                     children: "Cancel"
                                 }, void 0, false, {
                                     fileName: "[project]/src/components/dashboard/items-table.tsx",
-                                    lineNumber: 404,
+                                    lineNumber: 415,
                                     columnNumber: 17
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Button"], {
@@ -1980,30 +1991,30 @@ function ItemsTable({ items, categories, view, onAddItem, onEditItem, onDeleteIt
                                     children: "Confirm Sale"
                                 }, void 0, false, {
                                     fileName: "[project]/src/components/dashboard/items-table.tsx",
-                                    lineNumber: 405,
+                                    lineNumber: 416,
                                     columnNumber: 17
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/components/dashboard/items-table.tsx",
-                            lineNumber: 403,
+                            lineNumber: 414,
                             columnNumber: 13
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/components/dashboard/items-table.tsx",
-                    lineNumber: 380,
+                    lineNumber: 381,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/src/components/dashboard/items-table.tsx",
-                lineNumber: 379,
+                lineNumber: 380,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/src/components/dashboard/items-table.tsx",
-        lineNumber: 240,
+        lineNumber: 241,
         columnNumber: 5
     }, this);
 }
